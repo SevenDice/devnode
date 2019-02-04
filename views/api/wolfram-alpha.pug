@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  .pb-2.mt-2.mb-4.border-bottom
+    h2 Wolfram Alpha API
+
+  h4 Find Solution
+  .row
+    .col-md-6
+      form(role='form', method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group
+          .input-group
+            input.form-control(type='text', name='task', placeholder='Enter the task')
+            span.input-group-btn
+              button.btn.btn-success(type='submit') Send
+  br
+  h2 Indefinite integral
+    br
+    img(src="https://www4b.wolframalpha.com/Calculate/MSP/MSP36181bg88303b81i1fi6000068994910g8642ha5?MSPStoreType=image/gif&s=19" alt="integral e^x/(e^(2 x) + 2 e^x + 1) dx = -1/(e^x + 1) + constant")
+    h2 Plots of the integral
+    img(src="https://www4b.wolframalpha.com/Calculate/MSP/MSP36191bg88303b81i1fi600004c2f3gh12c5bd39h?MSPStoreType=image/gif&s=19" alt="")
+    img(src="https://www4b.wolframalpha.com/Calculate/MSP/MSP36201bg88303b81i1fi600006033fide5ffdggfh?MSPStoreType=image/gif&s=19" alt="")
+    h2 Series expansion of the integral at x=0
+    img(src="https://www4b.wolframalpha.com/Calculate/MSP/MSP36211bg88303b81i1fi600004bghb0b66h47ff71?MSPStoreType=image/gif&s=19" alt="-1/2 + x/4 - x^3/48 + x^5/480 + O(x^6)\
+    (Taylor series)")
+    h2 Definite integral
+    img(src="https://www4b.wolframalpha.com/Calculate/MSP/MSP36221bg88303b81i1fi6000010edi0775bbcga9i?MSPStoreType=image/gif&s=19" alt="integral_0^∞ e^x/(1 + 2 e^x + e^(2 x)) dx = 1/2 = 0.5")
