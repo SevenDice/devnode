@@ -25,9 +25,10 @@ exports.getApi = (req, res) => {
     title: 'API Examples'
   });
 };
+
 /**
- * GET /api/foursquare
- * Foursquare API example.
+ * GET api/wolfram-alpha
+ * Wolfram Alpha API.
  */
 
 exports.getWolframAlpha = (req, res) => {
@@ -35,12 +36,19 @@ exports.getWolframAlpha = (req, res) => {
     title: 'WolframAPI'
   });
 }; 
+
+/**
+ * POST api/wolfram-alpha
+ * Wolfram Alpha API.
+ */
+
 // integrate e^x/(e^(2x)+2e^x+1)
 exports.postWolframAlpha = (req, res, next) => {
 const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
 const waTask = req.body.task;
 waApi.getFull(waTask).then((queryresult) => {
-  const pods = queryresult.pods;
+	const pods = queryresult.pods;
+	console.log(pods);
   const output = pods.map((pod) => {
     const subpodContent = pod.subpods.map(subpod =>
       `    img(src="${subpod.img.src}" alt="${subpod.img.alt}")`
