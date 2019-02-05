@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-
+//some changes for test git
 dotenv.load({ path: '.env.example' });
 
 const WolframAlphaAPI = require('./lib/WolframAlphaAPI');
