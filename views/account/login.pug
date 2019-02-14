@@ -1,41 +1,68 @@
-extends ../layout
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width,initial-scale=1,shrink-to-fit=no')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    meta(name='csrf-token', content=_csrf)
+    title #{title} - MathSolver
+    // Custom fonts for this template
+    link(href='vendor/fontawesome-free/css/all.min.css', rel='stylesheet', type='text/css')
+    link(href='https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i', rel='stylesheet')
+    // Custom styles for this template
+    link(href='/css/sb-admin-2.min.css', rel='stylesheet')
+  body.bg-gradient-primary
+    .container
+      // Outer Row 
+      .row.justify-content-center
+        .col-xl-10.col-lg-12.col-md-9
+          .card.o-hidden.border-0.shadow-lg.my-5
+            .card-body.p-0
+              // Nested Row within Card Body 
+              .row
+                .col-lg-6.d-none.d-lg-block.bg-login-image
+                .col-lg-6
+                  .p-5
+                    .text-center
+                      h1.h4.text-gray-900.mb-4 Welcome Back!
+                    form(method='POST').user
+                      input(type='hidden', name='_csrf', value=_csrf)
+                      .form-group
+                          input.form-control.form-control-user(type='email', name='email',  id='email', placeholder='Email', autofocus, autocomplete='email', required)
+                      .form-group
+                          input.form-control.form-control-user(type='password', name='password', id='password', placeholder='Password', autocomplete='current-password', required)
+                      .form-group
+                          button.btn.btn-primary.btn-user.btn-block(type='submit') Login
+                      hr
+                      a.btn.btn-facebook.btn-user.btn-block(href='/auth/facebook')
+                        i.fab.fa-facebook.fa-fw
+                        |    Login with Facebook
+                      a.btn.btn-google.btn-user.btn-block(href='/auth/google')
+                        i.fab.fa-google.fa-fw
+                        |    Login with Google
+                      a.btn.btn-google.btn-user.btn-block(href='/auth/twitter')
+                        i.fab.fa-twitter.fa-fw
+                        | Login with Twitter
+                      a.btn.btn-google.btn-user.btn-block(href='/auth/github')
+                        i.fab.fa-github.fa-fw
+                        | Login with Github
+                      a.btn.btn-google.btn-user.btn-block(href='/auth/linkedin')
+                        i.fab.fa-linkedin.fa-fw
+                        | Login with LinkedIn
+												
+												
 
-block content
-  .pb-2.mt-2.mb-4.border-bottom
-    h3 Sign in
-  form(method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group.row
-      label.col-md-3.col-form-label.font-weight-bold.text-right(for='email') Email
-      .col-md-7
-        input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, autocomplete='email', required)
-    .form-group.row
-      label.col-md-3.col-form-label.font-weight-bold.text-right(for='password') Password
-      .col-md-7
-        input.form-control(type='password', name='password', id='password', placeholder='Password', autocomplete='current-password', required)
-    .form-group
-      .offset-sm-3.col-md-7.pl-2
-        button.col-md-3.btn.btn-primary(type='submit')
-          i.far.fa-user.fa-sm
-          | Login
-        a.btn.btn-link(href='/forgot') Forgot your password?
-    .form-group
-      .offset-sm-3.col-md-7.pl-2
-        hr
-    .form-group
-      .offset-sm-3.col-md-7.pl-2
-        a.btn.btn-block.btn-facebook.btn-social(href='/auth/facebook')
-          i.fab.fa-facebook-f.fa-sm
-          | Sign in with Facebook
-        a.btn.btn-block.btn-twitter.btn-social(href='/auth/twitter')
-          i.fab.fa-twitter.fa-sm
-          | Sign in with Twitter
-        a.btn.btn-block.btn-google.btn-social(href='/auth/google')
-          i.fab.fa-google-plus-g.fa-xs
-          | Sign in with Google
-        a.btn.btn-block.btn-github.btn-social(href='/auth/github')
-          i.fab.fa-github.fa-sm
-          | Sign in with GitHub
-        a.btn.btn-block.btn-linkedin.btn-social(href='/auth/linkedin')
-          i.fab.fa-linkedin-in.fa-sm
-          | Sign in with LinkedIn
+                    hr
+                    .text-center
+                      a.small(href='/forgot') Forgot Password?
+                    .text-center
+                      a.small(href='/signup') Create an Account!
+    // Bootstrap core JavaScript
+    script(src='/vendor/jquery/jquery.min.js')
+    script(src='/vendor/bootstrap/js/bootstrap.bundle.min.js')
+    // Core plugin JavaScript
+    script(src='/vendor/jquery-easing/jquery.easing.min.js')
+    // Custom scripts for all pages
+    script(src='/js/sb-admin-2.min.js')

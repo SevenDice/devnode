@@ -1,23 +1,48 @@
-extends ../layout
-
-block content
-  .pb-2.mt-2.mb-4.border-bottom
-    h3 Sign up
-  form(id='signup-form', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group.row
-      label.col-md-3.col-form-label.font-weight-bold.text-right(for='email') Email
-      .col-md-7
-        input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, autocomplete='email', required)
-    .form-group.row
-      label.col-md-3.col-form-label.font-weight-bold.text-right(for='password') Password
-      .col-md-7
-        input.form-control(type='password', name='password', id='password', placeholder='Password', autocomplete='new-password', required)
-    .form-group.row
-      label.col-md-3.col-form-label.font-weight-bold.text-right(for='confirmPassword') Confirm Password
-      .col-md-7
-        input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Confirm Password', autocomplete='new-password', required)
-    .form-group.offset-sm-3.col-md-7.pl-2
-      button.btn.btn-success(type='submit')
-        i.fas.fa-user-plus.fa-sm
-        | Signup
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width,initial-scale=1,shrink-to-fit=no')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    meta(name='csrf-token', content=_csrf)
+    title #{title} - MathSolver
+    // Custom fonts for this template
+    link(href='vendor/fontawesome-free/css/all.min.css', rel='stylesheet', type='text/css')
+    link(href='https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i', rel='stylesheet')
+    // Custom styles for this template
+    link(href='css/sb-admin-2.min.css', rel='stylesheet')
+  body.bg-gradient-primary
+    .container
+      .card.o-hidden.border-0.shadow-lg.my-5
+        .card-body.p-0
+          // Nested Row within Card Body 
+          .row
+            .col-lg-5.d-none.d-lg-block.bg-register-image
+            .col-lg-7
+              .p-5
+                .text-center
+                  h1.h4.text-gray-900.mb-4 Create an Account!
+                form.user(method='POST')
+                  input(type='hidden', name='_csrf', value=_csrf)
+                  .form-group
+                    input.form-control.form-control-user(type='email', name='email', id='email', placeholder='Email', autofocus, autocomplete='email', required)
+                  .form-group.row
+                    .col-sm-6.mb-3.mb-sm-0
+                      input.form-control.form-control-user(type='password', name='password', id='password', placeholder='Password', autocomplete='new-password', required)
+                    .col-sm-6
+                      input.form-control.form-control-user(type='password', name='confirmPassword', id='confirmPassword', placeholder='Confirm Password', autocomplete='new-password', required)
+                  button.btn.btn-primary.btn-user.btn-block(type='submit') Register Account
+                hr
+                .text-center
+                  a.small(href='/forgot') Forgot Password?
+                .text-center
+                  a.small(href='/login') Already have an account? Login!
+    // Bootstrap core JavaScript
+    script(src='vendor/jquery/jquery.min.js')
+    script(src='vendor/bootstrap/js/bootstrap.bundle.min.js')
+    // Core plugin JavaScript
+    script(src='vendor/jquery-easing/jquery.easing.min.js')
+    // Custom scripts for all pages
+    script(src='js/sb-admin-2.min.js')
