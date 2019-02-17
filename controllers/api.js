@@ -40,16 +40,17 @@ const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
 const waTask = req.body.task;
 waApi.getFull(waTask).then((queryresult) => {
 	const pods = queryresult.pods;
-	console.log(pods);
+	//console.log(pods);
   const output = pods.map((pod) => {
     const subpodContent = pod.subpods.map(subpod =>
-      `    img(src="${subpod.img.src}" alt="${subpod.img.alt}")`
+      `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
     ).join('\n');
-    return `  h2 ${pod.title}\n${subpodContent}`;
+    return `<h2>${pod.title}</h2>\n${subpodContent}`;
   }).join('\n');
-	console.log(output);
-	req.flash('success', { msg: `Solution finded ${output}`});
-	res.redirect('/api/wolfram-alpha');
+  //console.log(output);
+  const taskResult = output;
+  res.send(taskResult);
+  //res.redirect('/api/wolfram-alpha')
 }).catch(console.error);
 }
 
