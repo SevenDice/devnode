@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/SevenDice/devnode.svg?token=cK7gbPv79sR5KLEJdqp3&branch=master)](https://travis-ci.com/SevenDice/devnode)
+
 Table of Contents
 -----------------
 
