@@ -41,14 +41,6 @@ describe('GET /contact', () => {
   });
 });
 
-describe('GET /api/upload', () => {
-  it('should return 200 OK', (done) => {
-    request(app)
-      .get('/api/upload')
-      .expect(200, done);
-  });
-});
-
 describe('GET /random-url', () => {
   it('should return 404', (done) => {
     request(app)
