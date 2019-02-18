@@ -34,6 +34,7 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
+const taskController = require('./controllers/task');
 
 /**
  * API keys and Passport configuration.
@@ -157,6 +158,7 @@ app.get('/api/upload', apiController.getFileUpload);
 app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
 app.get('/api/wolfram-alpha', apiController.getWolframAlpha);
 app.post('/api/wolfram-alpha', apiController.postWolframAlpha);
+app.get('/api/wolfram-alpha/result', apiController.getWolframAlphaResult);
 
 /**
  * OAuth authentication routes. (Sign in)
