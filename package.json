@@ -1,12 +1,12 @@
 {
-  "name": "hackathon-starter",
+  "name": "nodemath",
   "version": "5.1.2",
-  "description": "A boilerplate for Node.js web applications",
+  "description": "Web application ",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/sevendice/devnode.git"
   },
-  "author": "Sahat Yalkabov",
+  "author": "SevenDice",
   "license": "MIT",
   "scripts": {
     "postinstall": "npm rebuild node-sass",
@@ -24,7 +24,6 @@
     "bootstrap": "^4.2.1",
     "chalk": "^2.4.2",
     "cheerio": "^1.0.0-rc.2",
-    "clockwork": "^0.1.4",
     "compression": "^1.7.3",
     "connect-mongo": "^2.0.3",
     "dotenv": "^6.2.0",
@@ -35,10 +34,7 @@
     "express-status-monitor": "^1.2.3",
     "express-validator": "^5.3.1",
     "fbgraph": "^1.4.4",
-    "instagram-node": "^0.5.8",
     "jquery": "^3.3.1",
-    "lastfm": "^0.9.3",
-    "lob": "^6.0.3",
     "lusca": "^1.6.1",
     "mongoose": "^5.4.7",
     "morgan": "^1.9.1",
@@ -56,15 +52,10 @@
     "passport-local": "^1.0.0",
     "passport-oauth": "^1.0.0",
     "passport-openid": "^0.4.0",
-    "passport-snapchat": "^1.0.0",
     "passport-twitter": "^1.0.4",
-    "paypal-rest-sdk": "^1.8.1",
     "popper.js": "^1.14.6",
     "pug": "^2.0.3",
     "request": "^2.88.0",
-    "stripe": "^6.22.0",
-    "tumblr.js": "^2.0.0",
-    "twilio": "^3.27.1",
     "twit": "^2.2.11",
     "validator": "^10.11.0"
   },
