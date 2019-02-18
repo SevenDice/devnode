@@ -1,6 +1,5 @@
 const { promisify } = require('util');
 const request = require('request');
-const cheerio = require('cheerio');
 const axios = require('axios');
 const WolframAlphaAPI = require('../lib/WolframAlphaAPI');
 
@@ -29,7 +28,7 @@ exports.getWolframAlpha = (req, res) => {
 
 exports.getWolframAlphaResult = (req, res) => {
   res.render('api/wolfram-alpha-result', {
-    title: 'WolframAPI'
+   // title: 'WolframAPI'
   });
 }; 
 
@@ -38,7 +37,6 @@ exports.getWolframAlphaResult = (req, res) => {
  * Wolfram Alpha API.
  */
 
-// integrate e^x/(e^(2x)+2e^x+1)
 // integrate e^x/(e^(2x)+2e^x+1)
 exports.postWolframAlpha = (req, res, next) => {
   const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
@@ -65,9 +63,10 @@ exports.postWolframAlpha = (req, res, next) => {
         `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
       ).join('\n');
       return `<h2>${pod.title}</h2>\n${subpodContent}`;}).join('\n');
-    
-      new Task()
-        .save(taskResult)
+
+    // Save to db
+      new Task(taskResult)
+        .save()
         .then(task => {
           res.send(taskResult);
         })
@@ -75,19 +74,3 @@ exports.postWolframAlpha = (req, res, next) => {
   }).catch(console.error);
   }
  // }
-
-/**
- * GET /api/upload
- * File Upload API example.
- */
-
-exports.getFileUpload = (req, res) => {
-  res.render('api/upload', {
-    title: 'File Upload'
-  });
-};
-
-exports.postFileUpload = (req, res) => {
-  req.flash('success', { msg: 'File was uploaded successfully.' });
-  res.redirect('/api/upload');
-};

@@ -148,11 +148,9 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * API examples routes.
  */
 app.get('/api', apiController.getApi);
-app.get('/api/upload', apiController.getFileUpload);
-app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
 app.get('/api/wolfram-alpha', apiController.getWolframAlpha);
 app.post('/api/wolfram-alpha', apiController.postWolframAlpha);
-app.get('/api/wolfram-alpha/result', apiController.getWolframAlphaResult);
+app.get('/api/wolfram-alpha-result', apiController.getWolframAlphaResult);
 
 
 /**
