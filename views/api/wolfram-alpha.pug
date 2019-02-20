@@ -1,18 +1,21 @@
 extends ../layout
 
 block content
-  .pb-2.mt-2.mb-4.border-bottom
-    h2 Wolfram Alpha API
-
-  h4 Find Solution 
-  .row
-    .col-md-6
-      form(role='form', method='POST')
-        input(type='hidden', name='_csrf', value=_csrf)
-        .form-group
-          .input-group
-            input.form-control(type='text', name='task', placeholder='Enter the task')
-            span.input-group-btn
-              button.btn.btn-success(type='submit') Send
-              .col-md-6
-                .span #{taskResult}
+  // Begin Page Content 
+  .container-fluid
+    // Page Heading 
+    h1.h3.mb-4.text-gray-800 API
+      h4 Find Solution 
+      .row
+        .col-md-6
+          form(role='form', method='POST')
+            input(type='hidden', name='_csrf', value=_csrf)
+            .form-group
+              .input-group
+                input.form-control(type='text', name='task', placeholder='Enter the task')
+                span.input-group-btn
+                  button.btn.btn-success(type='submit') Send
+  //- // Begin Page Content 
+  //- .container-fluid
+  //-   // Page Heading 
+  //-   h1.h3.mb-4.text-gray-800 API

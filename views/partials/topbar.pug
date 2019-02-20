@@ -1,0 +1,38 @@
+// Topbar 
+nav.navbar.navbar-expand.navbar-light.bg-white.topbar.mb-4.static-top.shadow
+  // Sidebar Toggle (Topbar) 
+  button#sidebarToggleTop.btn.btn-link.d-md-none.rounded-circle.mr-3
+    i.fa.fa-bars
+  // Topbar Search 
+  form.d-none.d-sm-inline-block.form-inline.mr-auto.ml-md-3.my-2.my-md-0.mw-100.navbar-search
+    .input-group
+      input.form-control.bg-light.border-0.small(type='text', placeholder='Search for...', aria-label='Search', aria-describedby='basic-addon2')
+      .input-group-append
+        button.btn.btn-primary(type='button')
+          i.fas.fa-search.fa-sm
+  // Topbar Navbar 
+  ul.navbar-nav.ml-auto
+    if !user
+      li.nav-item(class=(title === 'Login') ? 'active' : undefined)
+        a.nav-link.text-gray-800(href='/login') Login
+      li.nav-item(class=(title === 'Create Account') ? 'active' : undefined)
+        a.nav-link.text-gray-800(href='/signup') Create Account
+    else
+      // Nav Item - User Information 
+      li.nav-item.dropdown.no-arrow(class=(title === 'Account Management') ? 'active' : undefined)
+        a.nav-link.dropdown-toggle#userDropdown(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+          span.mr-2.d-none.d-lg-inline.text-gray-600.small=user.profile.name || user.email || user.id
+          if user.profile.picture
+            img.img-profile.rounded-circle(src=user.profile.picture)
+          else
+            img.img-profile.rounded-circle(src=user.gravatar(60))
+        // Dropdown - User Information 
+        .dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='userDropdown')
+          a.dropdown-item(href='/account')
+            i.fas.fa-user.fa-sm.fa-fw.mr-2.text-gray-400
+            | Profile
+          .dropdown-divider
+          a.dropdown-item(href='#', data-toggle='modal', data-target='#logoutModal')
+            i.fas.fa-sign-out-alt.fa-sm.fa-fw.mr-2.text-gray-400
+            | Logout
+  // End of Topbar

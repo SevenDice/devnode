@@ -1,0 +1,44 @@
+// Sidebar 
+ul.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordion#accordionSidebar
+  // Sidebar - Brand 
+  a.sidebar-brand.d-flex.align-items-center.justify-content-center(href='/home')
+    .sidebar-brand-icon.rotate-n-15
+      i.fas.fa-square-root-alt
+    .sidebar-brand-text.mx-3
+      | NODE
+      sup MATH
+  // Divider 
+  hr.sidebar-divider.my-0
+  // Nav Item - Dashboard 
+  li.nav-item(class=(title === 'Home') ? 'active' : undefined)
+    a.nav-link(href='/')
+      i.fas.fa-fw.fa-tachometer-alt
+      span Home
+  // Nav Item
+  li.nav-item(class=(title === 'API Examples') ? 'active' : undefined)
+    a.nav-link(href='/api')
+      i.fas.fa-fw.fa-cog
+      span API
+  // Nav Item
+  li.nav-item(class=(title === 'Status') ? 'active' : undefined)
+    a.nav-link.collapsed(href='/status')
+      i.fas.fa-fw.fa-chart-area
+      span Status
+  // Divider 
+  hr.sidebar-divider
+  // Nav Item
+  li.nav-item(class=(title === 'WolframAPI') ? 'active' : undefined)
+    a.nav-link(href='/api/wolfram-alpha')
+      i.fas.fa-fw.fa-chart-area
+      span Wolfram Alpha
+  // Nav Item
+  li.nav-item(class=(title === 'Contact') ? 'active' : undefined)
+    a.nav-link(href='/contact')
+      i.fas.fa-fw.fa-table
+      span Contact
+  // Divider 
+  hr.sidebar-divider.d-none.d-md-block
+  // Sidebar Toggler (Sidebar) 
+  .text-center.d-none.d-md-inline
+    button.rounded-circle.border-0#sidebarToggle
+// End of Sidebar 
