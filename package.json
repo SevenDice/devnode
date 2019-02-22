@@ -9,7 +9,6 @@
   "author": "SevenDice",
   "license": "MIT",
   "scripts": {
-    "postinstall": "npm rebuild node-sass",
     "server": "nodemon app.js",
     "start": "node app.js",
     "test": "nyc mocha --timeout=15000 --exit",

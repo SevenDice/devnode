@@ -68,7 +68,7 @@ exports.postWolframAlpha = (req, res, next) => {
       new Task(taskResult)
         .save()
         .then(task => {
-          res.send(taskResult);
+          res.send(output);
         })
     
   }).catch(console.error);
