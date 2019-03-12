@@ -5,35 +5,27 @@ const WolframAlphaAPI = require('../lib/WolframAlphaAPI');
 
 const User = require('../models/User');
 const Task = require('../models/Task');
-/**
- * GET /api
- * List of API examples.
- */
+
+// TODO
+// 1. Get list of all solved tasks by User
+// 2. View single solution
+// 3. Delete single solution
+// 4. Delete all solutions
+// 5. Redis integration
+// 6. Generate PDF with solution
+// 7. Get list of all solved tasks by all users (optional)
+// 8. Dividing solutions by category ex. like integral (optional)
+// 9. Sharing link with solution, for example button copy to clipboard
+
 exports.getApi = (req, res) => {
   res.render('api/index', {
     title: 'Find Solution'
   });
 };
 
-/**
- * GET api/wolfram-alpha
- * Wolfram Alpha API.
- */
-
-exports.getWolframAlpha = (req, res) => {
-  res.render('api/wolfram-alpha', {
-    title: 'WolframAPI'
-  });
-}; 
-
 exports.getWolframAlphaResult = (req, res) => {
-  res.send('api/wolfram-alpha-result');
+  res.send('api/solution/show_id');
 }; 
-
-/**
- * POST api/wolfram-alpha
- * Wolfram Alpha API.
- */
 
 // integrate e^x/(e^(2x)+2e^x+1)
 exports.postWolframAlpha = (req, res, next) => {

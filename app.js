@@ -31,7 +31,6 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
-const taskController = require('./controllers/task');
 
 /**
  * API keys and Passport configuration.
@@ -130,13 +129,12 @@ app.post('/account/delete', passportConfig.isAuthenticated, userController.postD
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
 /**
- * API examples routes.
+ * API routes.
  */
-app.get('/task', taskController.getTask);
 app.get('/api', apiController.getApi);
-app.get('/api/wolfram-alpha', apiController.getWolframAlpha);
-app.post('/api/wolfram-alpha', apiController.postWolframAlpha);
-app.get('/api/wolfram-alpha-result', apiController.getWolframAlphaResult);
+//app.get('/api/wolfram-alpha', apiController.getWolframAlpha);
+app.post('/api', apiController.postWolframAlpha);
+// app.get('/api/wolfram-alpha-result', apiController.getWolframAlphaResult);
 
 
 /**
