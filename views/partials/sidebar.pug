@@ -9,33 +9,33 @@ ul.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordion#accordionSideba
       sup MATH
   // Divider 
   hr.sidebar-divider.my-0
-  // Nav Item - Dashboard 
+  // Nav Item - Home 
   li.nav-item(class=(title === 'Home') ? 'active' : undefined)
     a.nav-link(href='/')
+      i.fas.fa-fw.fa-home
+      span Home
+  // Nav Item - Dashboard 
+  li.nav-item(class=(title === 'Dashboard') ? 'active' : undefined)
+    a.nav-link(href='/dashboard')
       i.fas.fa-fw.fa-tachometer-alt
       span Dashboard
   // Nav Item
-  li.nav-item(class=(title === 'API Examples') ? 'active' : undefined)
+  li.nav-item(class=(title === 'Find Solution') ? 'active' : undefined)
     a.nav-link(href='/api')
       i.fas.fa-fw.fa-cog
-      span API
-  // Nav Item
-  li.nav-item(class=(title === 'Status') ? 'active' : undefined)
-    a.nav-link.collapsed(href='/status')
-      i.fas.fa-fw.fa-chart-area
-      span Status
-  // Divider 
-  hr.sidebar-divider
-  // Nav Item
-  li.nav-item(class=(title === 'WolframAPI') ? 'active' : undefined)
-    a.nav-link(href='/api/wolfram-alpha')
-      i.fas.fa-fw.fa-chart-area
-      span Wolfram Alpha
+      span Find Solution
   // Nav Item
   li.nav-item(class=(title === 'Contact') ? 'active' : undefined)
     a.nav-link(href='/contact')
       i.fas.fa-fw.fa-table
       span Contact
+    // Divider 
+  hr.sidebar-divider
+  // Nav Item
+  li.nav-item(class=(title === 'Status') ? 'active' : undefined)
+    a.nav-link.collapsed(href='/status')
+      i.fas.fa-fw.fa-chart-area
+      span Status
   // Divider 
   hr.sidebar-divider.d-none.d-md-block
   // Sidebar Toggler (Sidebar) 

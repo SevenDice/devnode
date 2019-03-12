@@ -111,6 +111,7 @@ app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/popper.js/d
  * Primary app routes.
  */
 app.get('/', homeController.index);
+app.get('/dashboard', homeController.getDashboard)
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);

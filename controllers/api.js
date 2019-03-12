@@ -11,7 +11,7 @@ const Task = require('../models/Task');
  */
 exports.getApi = (req, res) => {
   res.render('api/index', {
-    title: 'API Examples'
+    title: 'Find Solution'
   });
 };
 
@@ -27,9 +27,7 @@ exports.getWolframAlpha = (req, res) => {
 }; 
 
 exports.getWolframAlphaResult = (req, res) => {
-  res.render('api/wolfram-alpha-result', {
-   // title: 'WolframAPI'
-  });
+  res.send('api/wolfram-alpha-result');
 }; 
 
 /**
