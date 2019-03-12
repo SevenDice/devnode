@@ -4,4 +4,38 @@ block content
   // Begin Page Content 
   .container-fluid
     // Page Heading 
-    h1.h3.mb-4.text-gray-800 Dashboard
+    h1.h3.mb-2.text-gray-800 Dashboard
+    p.mb-4 List of your solved tasks. From here you can view/delete your tasks
+    // DataTales Example 
+    .card.shadow.mb-4
+      .card-header.py-3
+        h6.m-0.font-weight-bold.text-primary Solved Tasks
+      .card-body
+        .table-responsive
+          table.table.table-bordered#dataTable(width='100%', cellspacing='0')
+            thead
+              tr
+                th Task
+                th Date
+                th View Task
+                th Delete Task
+            tfoot
+              tr
+                th Task
+                th Date
+                th View Task
+                th Delete Task
+            tbody
+              tr
+                td integrate e^x/(e^(2x)+2e^x+1)
+                td 12.03.2019 14:04
+                td
+                  a.btn.btn-info.btn-icon-split(href='#')
+                    span.icon.text-white-50
+                      i.fas.fa-info-circle
+                    span.text View
+                td
+                  a.btn.btn-danger.btn-icon-split(href='#')
+                    span.icon.text-white-50
+                      i.fas.fa-trash
+                    span.text Delete
