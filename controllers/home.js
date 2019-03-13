@@ -1,3 +1,11 @@
+const { promisify } = require('util');
+const request = require('request');
+const axios = require('axios');
+const WolframAlphaAPI = require('../lib/WolframAlphaAPI');
+
+const User = require('../models/User');
+const Task = require('../models/Task');
+
 /**
  * GET /
  * Home page.
@@ -8,9 +16,14 @@ exports.index = (req, res) => {
   });
 };
 
+// Get all solutions by user
 exports.getDashboard = (req, res) => {
-  res.render('dashboard', {
-    title: 'Dashboard'
-  });
+  Task.find({user: req.user.id})
+  .then(tasks => {
+    res.render('dashboard', {
+      tasks: tasks,
+      title: 'Dashboard'
+    });
+  })
 };
 

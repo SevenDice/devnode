@@ -17,35 +17,57 @@ const Task = require('../models/Task');
 // 8. Dividing solutions by category ex. like integral (optional)
 // 9. Sharing link with solution, for example button copy to clipboard
 
+// TODO 
+// include all routes in app.js
+
 exports.getApi = (req, res) => {
   res.render('api/index', {
     title: 'Find Solution'
   });
 };
 
-exports.getWolframAlphaResult = (req, res) => {
-  res.send('api/solution/show_id');
-}; 
+// Get all solutions route = api/solutions
+exports.getAllSolutions = (req, res) => {
+  Task.find({})
+  .populate('user')
+  .sort({date:'desc'})
+  .then(tasks => {
+    res.render('api/solutions'), { // TODO Pug template
+      tasks: tasks
+    }
+  })
+}
 
+// Show single solution route = solution/:id
+exports.getSolution = (req, res) => {
+  Task.findOne({
+    _id: req.params.id
+  })
+  .populate('user')
+  .then(task => {
+    if(req.user){
+      if(req.user.id == task.user._id){
+        res.render('api/solution', {
+          task:task
+        });
+      } else {
+        res.redirect('/dashboard');
+      }
+  };
+}); 
+
+// Find solution and save it
 // integrate e^x/(e^(2x)+2e^x+1)
-exports.postWolframAlpha = (req, res, next) => {
+exports.findSolution = (req, res, next) => {
   const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
-  // if(!req.body.task) {
-  //   errors.push({text: 'Please enter a task'});
-  // }
-  // if(errors.length > 0){
-  //   res.render('api/wolfram-alpha', {
-  //     errors: errors,
-  //     task: req.body.task
-  //   });
-  // } else {
     const waTask = req.body.task;
     waApi.getFull(waTask).then((queryresult) => {
     const pods = queryresult.pods;
-    const taskResult = {
+    const newResult = {
       taskName: req.body.task,
+      taskCategory: pods.title[1],
       contentData: pods,
-      //userId: req.user.id
+      user: req.user.id
     }
     // For future use
     const output = pods.map((pod) => {
@@ -55,12 +77,19 @@ exports.postWolframAlpha = (req, res, next) => {
       return `<h2>${pod.title}</h2>\n${subpodContent}`;}).join('\n');
 
     // Save to db
-      new Task(taskResult)
+      new Task(newResult)
         .save()
         .then(task => {
-          res.send(output);
+          res.redirect(`api/solution/${task.id}`);
         })
     
   }).catch(console.error);
-  }
- // }
+  }}
+
+// Delete task route = api/solution/:id
+exports.deleteTask = (req, res) => {
+  Task.remove({_id: req.params.id})
+  .then(() => {
+    res.redirect('/dashboard')
+  })
+}
