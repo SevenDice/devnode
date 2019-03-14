@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const taskSchema = new mongoose.Schema({
   taskName: {type: String, required: true},
-  taskCategory: {type: String, required: true},
+  taskCategory: {type: String, required: false},
   contentData: Schema.Types.Mixed,
   date: {type: Date, default: Date.now},
   user: {type: Schema.Types.ObjectId, ref: 'User'}

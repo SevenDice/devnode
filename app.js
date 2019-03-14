@@ -136,6 +136,7 @@ app.post('/api', apiController.findSolution);
 app.get('/api/solutions', apiController.getAllSolutions);
 app.get('/api/solution/:id', apiController.getSolution);
 app.post('/dashboard/:id', apiController.deleteTask);
+app.post('api/solutions/delete', apiController.deleteAllSolutions);
 
 
 /**

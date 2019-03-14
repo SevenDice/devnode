@@ -16,6 +16,7 @@ const Task = require('../models/Task');
 // 7. Get list of all solved tasks by all users (optional)
 // 8. Dividing solutions by category ex. like integral (optional)
 // 9. Sharing link with solution, for example button copy to clipboard
+// 10. Check if task already in db, then get it from db
 
 exports.getApi = (req, res) => {
   res.render('api/index', {
@@ -36,6 +37,14 @@ exports.getAllSolutions = (req, res) => {
   });
 };
 
+// Delete all solutions
+exports.deleteAllSolutions = (req, res) => {
+  Task.drop()
+  res.render('api/solutions', {
+    title: 'Solutions'
+  });
+};
+
 // Show single solution route = solution/:id
 exports.getSolution = (req, res) => {
   Task.findOne({
@@ -43,27 +52,35 @@ exports.getSolution = (req, res) => {
   })
   .populate('user')
   .then(task => {
+    const output = task.contentData.map((pod) => {
+      const subpodContent = pod.subpods.map(subpod =>
+        `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
+      ).join('\n');
+      return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;}).join('\n');
     if(req.user){
       if(req.user.id == task.user._id){
         res.render('api/solution', {
-          task:task
+          task:task,
+          output:output,
+          title: 'View Solution'
         });
       } else {
         res.redirect('/dashboard');
       }
-  }});
+  }}
+  );
 }; 
 
 // Find solution and save it
 // integrate e^x/(e^(2x)+2e^x+1)
-exports.findSolution = (req, res) => {
+exports.findSolution = (req, res, next) => {
   const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
     const waTask = req.body.task;
     waApi.getFull(waTask).then((queryresult) => {
     const pods = queryresult.pods;
     const newResult = {
       taskName: req.body.task,
-      taskCategory: pods.title[1],
+      //taskCategory: pods.title,
       contentData: pods,
       user: req.user.id
     }
