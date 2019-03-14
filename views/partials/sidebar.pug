@@ -22,8 +22,13 @@ ul.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordion#accordionSideba
   // Nav Item
   li.nav-item(class=(title === 'Find Solution') ? 'active' : undefined)
     a.nav-link(href='/api')
-      i.fas.fa-fw.fa-cog
+      i.fas.fa-fw.fa-calculator
       span Find Solution
+  // Nav Item
+  li.nav-item(class=(title === 'Solutions') ? 'active' : undefined)
+    a.nav-link(href='/api/solutions')
+      i.fas.fa-fw.fa-list-ul
+      span All Solutions
   // Nav Item
   li.nav-item(class=(title === 'Contact') ? 'active' : undefined)
     a.nav-link(href='/contact')

@@ -17,9 +17,6 @@ const Task = require('../models/Task');
 // 8. Dividing solutions by category ex. like integral (optional)
 // 9. Sharing link with solution, for example button copy to clipboard
 
-// TODO 
-// include all routes in app.js
-
 exports.getApi = (req, res) => {
   res.render('api/index', {
     title: 'Find Solution'
@@ -29,14 +26,15 @@ exports.getApi = (req, res) => {
 // Get all solutions route = api/solutions
 exports.getAllSolutions = (req, res) => {
   Task.find({})
-  .populate('user')
+  .populate('User')
   .sort({date:'desc'})
   .then(tasks => {
-    res.render('api/solutions'), { // TODO Pug template
-      tasks: tasks
-    }
-  })
-}
+    res.render('api/solutions', {
+      tasks: tasks,
+      title: 'Solutions'
+    });
+  });
+};
 
 // Show single solution route = solution/:id
 exports.getSolution = (req, res) => {
@@ -53,12 +51,12 @@ exports.getSolution = (req, res) => {
       } else {
         res.redirect('/dashboard');
       }
-  };
-}); 
+  }});
+}; 
 
 // Find solution and save it
 // integrate e^x/(e^(2x)+2e^x+1)
-exports.findSolution = (req, res, next) => {
+exports.findSolution = (req, res) => {
   const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
     const waTask = req.body.task;
     waApi.getFull(waTask).then((queryresult) => {
@@ -81,15 +79,15 @@ exports.findSolution = (req, res, next) => {
         .save()
         .then(task => {
           res.redirect(`api/solution/${task.id}`);
-        })
+        });
     
   }).catch(console.error);
-  }}
+};
 
 // Delete task route = api/solution/:id
-exports.deleteTask = (req, res) => {
+exports.deleteTask = (req, res, next) => {
   Task.remove({_id: req.params.id})
   .then(() => {
     res.redirect('/dashboard')
-  })
-}
+  });
+};

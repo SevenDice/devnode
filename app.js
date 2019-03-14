@@ -132,9 +132,10 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * API routes.
  */
 app.get('/api', apiController.getApi);
-//app.get('/api/wolfram-alpha', apiController.getWolframAlpha);
-app.post('/api', apiController.postWolframAlpha);
-// app.get('/api/wolfram-alpha-result', apiController.getWolframAlphaResult);
+app.post('/api', apiController.findSolution);
+app.get('/api/solutions', apiController.getAllSolutions);
+app.get('/api/solution/:id', apiController.getSolution);
+app.post('/dashboard/:id', apiController.deleteTask);
 
 
 /**
