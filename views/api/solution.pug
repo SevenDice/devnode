@@ -4,6 +4,10 @@ block content
   // Begin Page Content 
   .container-fluid
     // Page Heading 
-    h1.h3.mb-4.text-gray-800 Solution
-      .div 
-        != output
+    .d-sm-flex.align-items-center.justify-content-between.mb-4
+      h1.h3.mb-0.text-gray-800 Solution
+    .card.shadow.mb-4
+      .card-header.py-3
+        h6.m-0.font-weight-bold.text-primary Description - #{task.taskName}
+      .card-body
+        !=output

@@ -24,11 +24,12 @@ block content
                 th Date
                 th View Task
             tbody
-              tr
-                td integrate e^x/(e^(2x)+2e^x+1)
-                td 12.03.2019 14:04
-                td
-                  a.btn.btn-info.btn-icon-split(href='#')
-                    span.icon.text-white-50
-                      i.fas.fa-info-circle
-                    span.text View
+              each task in tasks
+                tr
+                  td= task.taskName
+                  td= task.date
+                  td
+                    a.btn.btn-info.btn-icon-split(href=`/api/solution/${task.id}`)
+                      span.icon.text-white-50
+                        i.fas.fa-info-circle
+                      span.text View

@@ -26,16 +26,19 @@ block content
                 th View Task
                 th Delete Task
             tbody
-              tr
-                td integrate e^x/(e^(2x)+2e^x+1)
-                td 12.03.2019 14:04
-                td
-                  a.btn.btn-info.btn-icon-split(href='#')
-                    span.icon.text-white-50
-                      i.fas.fa-info-circle
-                    span.text View
-                td
-                  a.btn.btn-danger.btn-icon-split(href='#')
-                    span.icon.text-white-50
-                      i.fas.fa-trash
-                    span.text Delete
+              each task in tasks
+                tr
+                  td= task.taskName
+                  td= task.date
+                  td
+                    a.btn.btn-info.btn-icon-split(href=`/api/solution/${task.id}`)
+                      span.icon.text-white-50
+                        i.fas.fa-info-circle
+                      span.text View
+                  td
+                    form(action=`/api/solution/delete/${task.id}`, method='POST', onsubmit="return confirm('Are you sure you want to delete your solution?');")
+                      input(type='hidden', name='_csrf', value=_csrf)
+                      button.btn.btn-danger.btn-icon-split(type='submit')
+                        span.icon.text-white-50
+                          i.fas.fa-trash
+                        span.text Delete

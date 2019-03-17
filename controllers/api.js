@@ -7,13 +7,11 @@ const User = require('../models/User');
 const Task = require('../models/Task');
 
 // TODO
-// 1. Get list of all solved tasks by User
-// 2. View single solution
-// 3. Delete single solution
+// 2. 
+// 3. media query for resize img in solution
 // 4. Delete all solutions
 // 5. Redis integration
 // 6. Generate PDF with solution
-// 7. Get list of all solved tasks by all users (optional)
 // 8. Dividing solutions by category ex. like integral (optional)
 // 9. Sharing link with solution, for example button copy to clipboard
 // 10. Check if task already in db, then get it from db
@@ -101,10 +99,11 @@ exports.findSolution = (req, res, next) => {
   }).catch(console.error);
 };
 
-// Delete task route = api/solution/:id
-exports.deleteTask = (req, res, next) => {
-  Task.remove({_id: req.params.id})
+// Delete task route = api/solutions/delete/:id
+exports.deleteSolution = (req, res, next) => {
+  Task.deleteOne({_id: req.params.id})
   .then(() => {
+    req.flash('success', {msg: 'Solution was deleted'})
     res.redirect('/dashboard')
   });
 };
