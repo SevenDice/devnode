@@ -1,9 +1,4 @@
-const { promisify } = require('util');
-const request = require('request');
-const axios = require('axios');
 const WolframAlphaAPI = require('../lib/WolframAlphaAPI');
-
-const User = require('../models/User');
 const Task = require('../models/Task');
 
 // TODO
@@ -82,13 +77,6 @@ exports.findSolution = (req, res, next) => {
       contentData: pods,
       user: req.user.id
     }
-    // For future use
-    const output = pods.map((pod) => {
-      const subpodContent = pod.subpods.map(subpod =>
-        `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
-      ).join('\n');
-      return `<h2>${pod.title}</h2>\n${subpodContent}`;}).join('\n');
-
     // Save to db
       new Task(newResult)
         .save()
