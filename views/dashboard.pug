@@ -16,12 +16,14 @@ block content
             thead
               tr
                 th Task
+                th Category
                 th Date
                 th View Task
                 th Delete Task
             tfoot
               tr
                 th Task
+                th Categoty
                 th Date
                 th View Task
                 th Delete Task
@@ -29,6 +31,7 @@ block content
               each task in tasks
                 tr
                   td= task.taskName
+                  td= task.contentData[0].scanner
                   td= task.date
                   td
                     a.btn.btn-info.btn-icon-split(href=`/api/solution/${task.id}`)

@@ -7,7 +7,6 @@ const Task = require('../models/Task');
 // 4. Delete all solutions
 // 5. Redis integration
 // 6. Generate PDF with solution
-// 8. Dividing solutions by category ex. like integral (optional)
 // 9. Sharing link with solution, for example button copy to clipboard
 // 10. Check if task already in db, then get it from db
 
