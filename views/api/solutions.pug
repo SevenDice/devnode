@@ -29,8 +29,8 @@ block content
               each task in tasks
                 tr
                   td= task.taskName
+                  td= task.contentData[0].scanner
                   td= moment(task.date).format("MMMM Do YYYY, k:kk:ss")
-                  td= task.date
                   td
                     a.btn.btn-info.btn-icon-split(href=`/api/solution/${task.id}`)
                       span.icon.text-white-50
