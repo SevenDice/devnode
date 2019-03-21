@@ -32,7 +32,7 @@ block content
                 tr
                   td= task.taskName
                   td= task.contentData[0].scanner
-                  td= task.date
+                  td= moment(task.date).format("MMMM Do YYYY, k:kk:ss")
                   td
                     a.btn.btn-info.btn-icon-split(href=`/api/solution/${task.id}`)
                       span.icon.text-white-50

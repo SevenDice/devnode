@@ -17,11 +17,6 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
-const moment = require('moment');
-
-const formatDate = function(date, format){
-  return moment(date).format(format);
-};
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
@@ -64,11 +59,7 @@ mongoose.connection.on('error', (err) => {
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug', {
-  helpers: {
-    formatDate: formatDate
-  }
-});
+app.set('view engine', 'pug');
 app.use(expressStatusMonitor());
 app.use(compression());
 app.use(logger('dev'));
@@ -109,6 +100,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+app.locals.moment = require('moment');
 app.use('/', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/popper.js/dist/umd'), { maxAge: 31557600000 }));
 
