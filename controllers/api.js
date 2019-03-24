@@ -1,5 +1,8 @@
 const WolframAlphaAPI = require('../lib/WolframAlphaAPI');
 const Task = require('../models/Task');
+const puppeteer = require('puppeteer');
+const fs = require('fs-extra');
+const path = require('path');
 
 // TODO
 // 2. 
@@ -10,6 +13,7 @@ const Task = require('../models/Task');
 // 9. Sharing link with solution, for example button copy to clipboard
 // 10. Check if task already in db, then get it from db
 
+// Get api index page
 exports.getApi = (req, res) => {
   res.render('api/index', {
     title: 'Find Solution'
@@ -62,6 +66,46 @@ exports.getSolution = (req, res) => {
   }}
   );
 }; 
+
+// Generate PDF single solution route = solution/pdf/:id
+exports.getPDFSolution = (req, res) => {
+  Task.findOne({
+    _id: req.params.id
+  })
+  .then(task => {
+    (async function(){
+      try {
+
+        const output = task.contentData.map((pod) => {
+          const subpodContent = pod.subpods.map(subpod =>
+            `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
+          ).join('\n');
+          return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;}).join('\n');
+
+        const filePath = path.join(process.cwd(), 'generatedPDF', `${task.id}.pdf`)
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+  
+        await page.setContent(output);
+        await page.emulateMedia('screen');
+        await page.pdf({
+          path: filePath,
+          format: 'A4',
+          printBackground: true
+        });
+        const pdf = await (filePath);
+        await browser.close();
+        res.contentType('application/pdf'); 
+        res.setHeader('Content-Disposition', 'attachment; filename=' + task.id +'.pdf');
+        res.sendFile(pdf);
+    
+      } catch (e) {
+        console.log('our error', e);
+      }
+    })();
+  });
+
+};
 
 // Find solution and save it
 // integrate e^x/(e^(2x)+2e^x+1)

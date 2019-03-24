@@ -6,6 +6,11 @@ block content
     // Page Heading 
     .d-sm-flex.align-items-center.justify-content-between.mb-4
       h1.h3.mb-0.text-gray-800 Solution
+      form(action=`/api/solution/pdf/${task.id}`, method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        button.d-none.d-sm-inline-block.btn.btn-sm.btn-primary.shadow-sm(type= 'submit')
+          i.fas.fa-download.fa-sm.text-white-50
+          |  Generate PDF
     .card.shadow.mb-4
       .card-header.py-3
         h6.m-0.font-weight-bold.text-primary Description - #{task.taskName}
