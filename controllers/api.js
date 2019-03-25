@@ -9,7 +9,7 @@ const path = require('path');
 // 3. media query for resize img in solution
 // 4. Delete all solutions
 // 5. Redis integration
-// 6. Generate PDF with solution
+// 6. 
 // 9. Sharing link with solution, for example button copy to clipboard
 // 10. Check if task already in db, then get it from db
 
@@ -83,7 +83,7 @@ exports.getPDFSolution = (req, res) => {
           return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;}).join('\n');
 
         const filePath = path.join(process.cwd(), 'generatedPDF', `${task.id}.pdf`)
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({args: ['--no-sandbox']});
         const page = await browser.newPage();
   
         await page.setContent(output);
