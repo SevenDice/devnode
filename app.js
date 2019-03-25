@@ -137,6 +137,7 @@ app.get('/api/solution/:id', apiController.getSolution);
 app.post('/api/solution/delete/:id', apiController.deleteSolution);
 app.post('/api/solutions/delete', apiController.deleteAllSolutions);
 app.post('/api/solution/pdf/:id', apiController.getPDFSolution);
+app.get('/redis', apiController.testRedis);
 
 
 /**

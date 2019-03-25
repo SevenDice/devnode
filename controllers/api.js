@@ -3,6 +3,8 @@ const Task = require('../models/Task');
 const puppeteer = require('puppeteer');
 const fs = require('fs-extra');
 const path = require('path');
+const redis = require('redis');
+const client = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
 
 // TODO
 // 2. 
@@ -11,8 +13,22 @@ const path = require('path');
 // 5. Redis integration
 // 6. 
 // 9. Sharing link with solution, for example button copy to clipboard
-// 10. Check if task already in db, then get it from db
+// 10. 
 
+// Redis test route /redis
+exports.testRedis = (req, res) => {
+  client.set("string key", "string val", redis.print);
+  client.hset("hash key", "hashtest 1", "some value", redis.print);
+  client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
+  client.hkeys("hash key", function (err, replies) {
+    console.log(replies.length + " replies:");
+    replies.forEach(function (reply, i) {
+        console.log("    " + i + ": " + reply);
+    });
+    client.quit();
+    res.redirect('/');
+});
+}
 // Get api index page
 exports.getApi = (req, res) => {
   res.render('api/index', {
@@ -98,7 +114,15 @@ exports.getPDFSolution = (req, res) => {
         res.contentType('application/pdf'); 
         res.setHeader('Content-Disposition', 'attachment; filename=' + task.id +'.pdf');
         res.sendFile(pdf);
-    
+        
+        // var file = fs.createReadStream(fileName);
+        // file.on('end', function() {
+        //   fs.unlink(fileName, function() {
+        //     // file deleted
+        //   });
+        // });
+        // file.pipe(res);
+
       } catch (e) {
         console.log('our error', e);
       }
@@ -110,24 +134,32 @@ exports.getPDFSolution = (req, res) => {
 // Find solution and save it
 // integrate e^x/(e^(2x)+2e^x+1)
 exports.findSolution = (req, res, next) => {
-  const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
-    const waTask = req.body.task;
-    waApi.getFull(waTask).then((queryresult) => {
-    const pods = queryresult.pods;
-    const newResult = {
-      taskName: req.body.task,
-      //taskCategory: pods.title,
-      contentData: pods,
-      user: req.user.id
+  Task.findOne({
+    taskName: req.body.task
+  })
+  .then(result => {
+    if(result) {
+      res.redirect(`api/solution/${result.id}`);
     }
-    // Save to db
-      new Task(newResult)
-        .save()
-        .then(task => {
-          res.redirect(`api/solution/${task.id}`);
-        });
-    
-  }).catch(console.error);
+    else {
+      const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
+      const waTask = req.body.task;
+      waApi.getFull(waTask).then((queryresult) => {
+      const pods = queryresult.pods;
+      const newResult = {
+        taskName: req.body.task,
+        contentData: pods,
+        user: req.user.id
+      }
+      // Save to db
+        new Task(newResult)
+          .save()
+          .then(task => {
+            res.redirect(`api/solution/${task.id}`);
+          });
+    }).catch(console.error);
+    }
+  })
 };
 
 // Delete task route = api/solutions/delete/:id
