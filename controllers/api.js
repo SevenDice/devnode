@@ -25,7 +25,7 @@ exports.testRedis = (req, res) => {
     replies.forEach(function (reply, i) {
         console.log("    " + i + ": " + reply);
     });
-    client.quit();
+    //client.quit();
     res.redirect('/');
 });
 }
