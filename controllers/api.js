@@ -3,31 +3,44 @@ const Task = require('../models/Task');
 const puppeteer = require('puppeteer');
 const fs = require('fs-extra');
 const path = require('path');
-const redis = require('redis');
-const client = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
+var Redis = require('ioredis');
+var redis = new Redis(process.env.REDIS_URL,{connectTimeout: 10000});
 
 // TODO
-// 2. 
+// 2. fetch img's from json then convert it to binary and save it in db instead url from wolfram
 // 3. media query for resize img in solution
 // 4. Delete all solutions
 // 5. Redis integration
-// 6. 
+// 6. Deleting pdf after download or set expire
 // 9. Sharing link with solution, for example button copy to clipboard
-// 10. 
+// 10. Add admin page (optional)
 
 // Redis test route /redis
 exports.testRedis = (req, res) => {
-  client.set("string key", "string val", redis.print);
-  client.hset("hash key", "hashtest 1", "some value", redis.print);
-  client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
-  client.hkeys("hash key", function (err, replies) {
-    console.log(replies.length + " replies:");
-    replies.forEach(function (reply, i) {
-        console.log("    " + i + ": " + reply);
-    });
-    //client.quit();
-    res.redirect('/');
-});
+
+async function main() {
+  const shamu = {
+      type: 'killer whale',
+      age: 5,
+      lastFeedDate: 'Jan 06 2018',
+      size: { length: 30, weight: 8 },
+  };
+
+  try {
+      const key = 'shamu';
+      const result = await redis.set(key, JSON.stringify(shamu));
+      //console.log(result);
+      // Turn around and bring back Shamu immediately to prove it works.
+      const shamuReturns = JSON.parse(await redis.get(key));
+      console.log(shamuReturns);
+      res.redirect('/');
+  } catch (error) {
+      console.error(error);
+  }
+}
+
+main();
+// });
 }
 // Get api index page
 exports.getApi = (req, res) => {
