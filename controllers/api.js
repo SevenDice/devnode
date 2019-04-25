@@ -22,15 +22,9 @@ exports.testRedis = (req, res) => {
 
   async function main() {
     try {
-        const allHash = await redis.hgetall('solutionList');
-
-        function getKeyByValue(object, value) {
-          return Object.keys(object).find(key => object[key] === value);
-        }
-
-        console.log(JSON.stringify(getKeyByValue(allHash,"5cc1ae86df32bc1cc4fdce0e")));
-        redis.hdel(hashName, getKeyByValue(allHash,"5cc1ae86df32bc1cc4fdce0e"));
-        res.redirect('/');
+        const cachedSolution = JSON.parse(await redis.get('5cc1d7a8a9bcb30e940e1bbe'));
+        //console.log(cachedSolution)
+        res.send(cachedSolution._id);
     }
     catch (error) {
         console.error(error);
@@ -69,30 +63,44 @@ exports.deleteAllSolutions = (req, res) => {
 };
 
 // Show single solution route = solution/:id
+// NEED REFACTORING
 exports.getSolution = (req, res) => {
-  const key = 
-  Task.findOne({
-    _id: req.params.id
-  })
-  .populate('user')
-  .then(task => {
-    const output = task.contentData.map((pod) => {
-      const subpodContent = pod.subpods.map(subpod =>
-        `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
-      ).join('\n');
-      return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;}).join('\n');
-    if(req.user){
-      if(req.user.id == task.user._id){
-        res.render('api/solution', {
-          task:task,
-          output:output,
-          title: 'View Solution'
-        });
-      } else {
-        res.redirect('/dashboard');
+  async function showSolution() {
+    try {
+      let task = JSON.parse(await redis.get(req.params.id));
+      let output;
+      if(task._id = req.params.id) {
+        output = task.contentData.map((pod) => {
+          const subpodContent = pod.subpods.map(subpod =>
+            `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
+          ).join('\n');
+          return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;}).join('\n');
       }
-  }}
-  );
+      else {
+        Task.findOne({
+          _id: req.params.id
+        })
+        .populate('user')
+        .then(task => {
+          output = task.contentData.map((pod) => {
+            const subpodContent = pod.subpods.map(subpod =>
+              `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
+            ).join('\n');
+            return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;}).join('\n');
+        });
+      }
+      res.render('api/solution', {
+        task:task,
+        output:output,
+        title: 'View Solution'
+      });
+    } catch (error) {
+
+    }
+  }
+  (async () => {
+    await showSolution();
+  })();
 }; 
 
 // Generate PDF single solution route = solution/pdf/:id
