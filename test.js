@@ -35,48 +35,6 @@ waApi.getFull('integrate e^x/(e^(2x)+2e^x+1)').then((queryresult) => {
 //   console.log(output);
 // }).catch(console.error);
 
-exports.findSolution = (req, res) => {
-  const key = req.body.task;
-  const cachedSolution = JSON.parse(redis.get(key));
-  if (cachedSolution) {
-    console.log(`Exists in cache. Redirecting to solution ${cachedSolution.taskName}`);
-    res.redirect(`api/solution/${cachedSolution.id}`);
-  } else {
-    Task.findOne({
-      taskName: req.body.task
-    })
-    .then(solutionFromDB => {
-      if(solutionFromDB) {
-        const result = redis.set(solutionFromDB.taskName, JSON.stringify(solutionFromDB));
-        console.log(`Status Redis: ${result}. Exists in db. Saved to cache and redirecting to ${solutionFromDB.taskName}`);
-        res.redirect(`api/solution/${solutionFromDB.id}`);
-      }
-      else {
-        const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
-        const waTask = req.body.task;
-        waApi.getFull(waTask).then((queryresult) => {
-        const pods = queryresult.pods;
-        const newSolution = {
-          taskName: req.body.task,
-          contentData: pods,
-          user: req.user.id
-        }
-        // Save to db
-          new Task(newSolution)
-            .save()
-            console.log('New solution was added in db...')
-            .then(task => {
-              const cacheSolution = redis.set(task.taskName, JSON.stringify(task))
-              console.log(`Status Redis: ${cacheSolution}. Saved to cache and redirecting to ${task.taskName}`)
-              res.redirect(`api/solution/${task.id}`);
-            });
-      }).catch(console.error);
-      }
-    });
-  }
-};
-
-
 // Promise Example 
 /* ES5, using Bluebird */
 var isMomHappy = true;

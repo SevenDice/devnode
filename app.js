@@ -131,7 +131,7 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * API routes.
  */
 app.get('/api', apiController.getApi);
-app.post('/api', apiController.findSolution);
+app.post('/api', apiController.addSolution);
 app.get('/api/solutions', apiController.getAllSolutions);
 app.get('/api/solution/:id', apiController.getSolution);
 app.post('/api/solution/delete/:id', apiController.deleteSolution);

@@ -3,8 +3,9 @@ const Task = require('../models/Task');
 const puppeteer = require('puppeteer');
 const fs = require('fs-extra');
 const path = require('path');
-var Redis = require('ioredis');
-var redis = new Redis(process.env.REDIS_URL,{connectTimeout: 10000});
+const Redis = require('ioredis');
+const redis = new Redis(process.env.REDIS_URL,{connectTimeout: 10000});
+const hashName = 'solutionList';
 
 // TODO
 // 2. fetch img's from json then convert it to binary and save it in db instead url from wolfram
@@ -20,30 +21,16 @@ var redis = new Redis(process.env.REDIS_URL,{connectTimeout: 10000});
 exports.testRedis = (req, res) => {
 
   async function main() {
-    const shamu = {
-        // type: 'killer whale',
-        // age: 5,
-        // lastFeedDate: 'Jan 06 2018',
-        solution: 'name'
-    };
-
     try {
-        const key = 'shamu';
-        const result = await redis.hmset(key, shamu);
-        console.log(result);
-        //HMGET myhash field1 field2 nofield (for multiple values)
-        //HGET for single value
+        const allHash = await redis.hgetall('solutionList');
 
-        //For retrive all values example
-        // redisclient.hgetall(key, function (err, dbset) {
+        function getKeyByValue(object, value) {
+          return Object.keys(object).find(key => object[key] === value);
+        }
 
-        //   // gather all records
-        //   for (id in dbset) {
-        //        ...
-        //   }
-        // }); 
-        const rcache = await redis.hget('shamu', 'solution');
-        console.log(rcache);
+        console.log(JSON.stringify(getKeyByValue(allHash,"5cc1ae86df32bc1cc4fdce0e")));
+        redis.hdel(hashName, getKeyByValue(allHash,"5cc1ae86df32bc1cc4fdce0e"));
+        res.redirect('/');
     }
     catch (error) {
         console.error(error);
@@ -156,96 +143,138 @@ exports.getPDFSolution = (req, res) => {
 
 };
 
-// 1. Check in cache (if exists then redirect to solution)
-//  1.1 Get hash with solution name as key and _id solution as value ex. 
-//    (integrate e^x/(e^(2x)+2e^x+1): '5c9a7d6bb4fec20c10e716db')
-//  1.2 Get necessary value (_id) from hash and using it as key for search solution from cache. 
-// 2. Check in db (if exists then save it to cache and redirect)
-//  2.1 Add to hash new key: value
-// 3. Send request to WolframAlpha 
-// 4. Save it to db
-// 5. Save it to cache
-//  5.1 Create hash (if not exists), then add key(taksName): value(_id)
-//  5.2 Create solution record in Redis as key(id): value(solution)
-// 6. Redirect to solution
+// Проверяем в кэше:
+// - Ищем (redis.hexists(hashName, hashField)) в хэше('Solution list') id ('Value') решенной задачи по условию задачи ('Hash Field Name'), полученному из формы;
+// - Если(hashFieldExists) найдено, то:
+//   - Получаем (redis.hget(hashName, hashField)) id решенной задачи (cachedHashValue);
+//   - Редирект res.redirect(`api/solution/${cachedHashValue._id}`);
+// - Иначе:
+//   - Проверяем в БД:
+//     - Если найдено, то:
+//       - Сохраняем в хэш поле(условие задачи): значение(id задачи) redis.hset(hashName, hashField, solution.id);
+//       - Сохраняем в кэш ключ(id задачи): значение(решение задачи) redis.set(solution.id, );
+//       - Редирект res.redirect(`api/solution/${solution._id}`);
+//     - Иначе:
+//       - Посылаем запрос к WolframAlphaAPI;
+//       - Сохраняем в БД;
+//       - Создаем хэш Solution List;
+//       - Добавляем в хэш > условие задачи: id задачи;
+//       - Добавлеяем строку (ключ: значение) в кэш > id задачи: решение задачи;
+//       - Редирект res.redirect(`api/solution/${задача.id}`);
 
 // Find solution and save it
 // integrate e^x/(e^(2x)+2e^x+1)
-// exports.findSolution = (req, res) => {
-//   const key = req.body.task;
-//   const cachedSolution = JSON.parse(redis.get(key));
-//   if (cachedSolution) {
-//     console.log(`Exists in cache. Redirecting to solution ${cachedSolution.taskName}`);
-//     res.redirect(`api/solution/${cachedSolution.id}`);
-//   } else {
-//     Task.findOne({
-//       taskName: req.body.task
-//     })
-//     .then(solutionFromDB => {
-//       if(solutionFromDB) {
-//         const result = redis.set(solutionFromDB.taskName, JSON.stringify(solutionFromDB));
-//         console.log(`Status Redis: ${result}. Exists in db. Saved to cache and redirecting to ${solutionFromDB.taskName}`);
-//         res.redirect(`api/solution/${solutionFromDB.id}`);
-//       }
-//       else {
-//         const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
-//         const waTask = req.body.task;
-//         waApi.getFull(waTask).then((queryresult) => {
-//         const pods = queryresult.pods;
-//         const newSolution = {
-//           taskName: req.body.task,
-//           contentData: pods,
-//           user: req.user.id
-//         }
-//         // Save to db
-//           new Task(newSolution)
-//             .save()
-//             console.log('New solution was added in db...')
-//             .then(task => {
-//               const cacheSolution = redis.set(task.taskName, JSON.stringify(task))
-//               console.log(`Status Redis: ${cacheSolution}. Saved to cache and redirecting to ${task.taskName}`)
-//               res.redirect(`api/solution/${task.id}`);
-//             });
-//       }).catch(console.error);
-//       }
-//     });
-//   }
-// };
-
-exports.findSolution = (req, res, next) => {
-  Task.findOne({
-    taskName: req.body.task
-  })
-  .then(result => {
-    if(result) {
-      res.redirect(`api/solution/${result.id}`);
-    }
-    else {
-      const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
-      const waTask = req.body.task;
-      waApi.getFull(waTask).then((queryresult) => {
-      const pods = queryresult.pods;
-      const newResult = {
-        taskName: req.body.task,
-        contentData: pods,
-        user: req.user.id
+exports.addSolution = (req, res) => {
+  const hashField = req.body.task;
+  async function findSolution() {
+    try {
+      const hashFieldExists = await redis.hexists(hashName, hashField);
+      if(hashFieldExists) {
+        const getHashValue = await redis.hget(hashName, hashField)
+        res.redirect(`api/solution/${getHashValue}`);
       }
-      // Save to db
-        new Task(newResult)
-          .save()
-          .then(task => {
-            res.redirect(`api/solution/${task.id}`);
-          });
-    }).catch(console.error);
+      else {
+        Task.findOne({
+          taskName: req.body.task
+        })
+        .then(solutionFromDB => {
+          if (solutionFromDB) {
+            redis.hset(hashName, hashField, solutionFromDB.id);
+            redis.set(solutionFromDB.id, JSON.stringify(solutionFromDB));
+            res.redirect(`api/solution/${solutionFromDB.id}`);
+          }
+          else {
+            const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
+            const waTask = req.body.task;
+            waApi.getFull(waTask).then((queryresult) => {
+            const pods = queryresult.pods;
+            const newSolution = {
+              taskName: req.body.task,
+              contentData: pods,
+              user: req.user.id
+            }
+            // Save to db
+              new Task(newSolution)
+                .save()
+                .then(task => {
+                  redis.hset(hashName, task.taskName, task.id);
+                  redis.set(task.id, JSON.stringify(task))
+                  res.redirect(`api/solution/${task.id}`);
+                });
+          })
+          }
+        })
+      }
     }
-  })
+    catch (error) {
+    }
+  }
+
+(async () => {
+  await findSolution();
+})();
 };
+
+
+
+// // Find solution and save it (only db)
+// // integrate e^x/(e^(2x)+2e^x+1)
+// exports.findSolution = (req, res, next) => {
+//   Task.findOne({
+//     taskName: req.body.task
+//   })
+//   .then(result => {
+//     if(result) {
+//      res.redirect(`api/solution/${result.id}`);
+//     //res.send(result);
+//     }
+//     else {
+//       const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
+//       const waTask = req.body.task;
+//       waApi.getFull(waTask).then((queryresult) => {
+//       const pods = queryresult.pods;
+//       const newResult = {
+//         taskName: req.body.task,
+//         contentData: pods,
+//         user: req.user.id
+//       }
+//       // Save to db
+//         new Task(newResult)
+//           .save()
+//           .then(task => {
+//            res.redirect(`api/solution/${task.id}`);
+//         // res.send(task);
+//           });
+//     }).catch(console.error);
+//     }
+//   })
+// };
 
 // Delete task route = api/solutions/delete/:id
 exports.deleteSolution = (req, res, next) => {
-  Task.deleteOne({_id: req.params.id})
-  .then(() => {
-    req.flash('success', {msg: 'Solution was deleted'})
-    res.redirect('/dashboard')
-  });
+  async function eraseFromDBandCache(){
+    try {
+      const allHash = await redis.hgetall(hashName);
+
+      function getKeyByValue(object, value) {
+        return Object.keys(object).find(key => object[key] === value);
+      }
+      const hashField = getKeyByValue(allHash, req.params.id);
+      console.log(hashField);
+      redis.del(req.params.id);
+      redis.hdel(hashName, hashField);
+      Task.deleteOne({_id: req.params.id})
+      .then(() => {
+        req.flash('success', {msg: 'Solution was deleted'})
+        res.redirect('/dashboard')
+      });
+    }
+    catch(error){
+
+    }
+  }
+
+  (async () => {
+    await eraseFromDBandCache();
+  })();
 };
