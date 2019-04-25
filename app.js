@@ -20,7 +20,7 @@ const expressStatusMonitor = require('express-status-monitor');
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env.example' });
+dotenv.config({ path: '.env.example' });
 
 /**
  * Controllers (route handlers).
