@@ -118,7 +118,7 @@ exports.getPDFSolution = (req, res) => {
           ).join('\n');
           return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;}).join('\n');
 
-        const filePath = path.join(process.cwd(), 'generatedPDF', `${task.id}.pdf`)
+        const filePath = path.join(process.cwd(), 'generatedPDF', `${task._id}.pdf`)
         const browser = await puppeteer.launch({args: ['--no-sandbox']});
         const page = await browser.newPage();
   
@@ -132,7 +132,7 @@ exports.getPDFSolution = (req, res) => {
         const pdf = await (filePath);
         await browser.close();
         res.contentType('application/pdf'); 
-        res.setHeader('Content-Disposition', 'attachment; filename=' + task.id +'.pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=' + task._id +'.pdf');
         res.sendFile(pdf);
         
         // var file = fs.createReadStream(fileName);
