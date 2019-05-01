@@ -6,11 +6,78 @@ block content
     // Page Heading 
     .d-sm-flex.align-items-center.justify-content-between.mb-4
       h1.h3.mb-0.text-gray-800 Home
-    .card.shadow.mb-4
-      .card-header.py-3
-        h6.m-0.font-weight-bold.text-primary Welcome to NODEMATH
-      .card-body
-        .text-center
-          img.img-fluid.px-3.px-sm-4.mt-3.mb-4(style='width: 25rem;', src='img/undraw_exams_g4ow.svg', alt='')
-        p Text about site
-        a(target='_blank', rel='nofollow', href='https://undraw.co/') Browse Illustrations on unDraw →
+    .row
+      .col-lg-6
+        // Basic Card Example 
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Calculus & Analysis
+          .card-body
+            p Compute integrals, derivatives and limits as well as analyze sums, products and series.
+            p
+              | Compute an integral:
+              br
+              b integrate sin x dx from x=0 to pi
+            p
+              | Calculate a derivative:
+              br
+              b derivative of x^4 sin x
+            p
+              | Solve an ordinary differential equation:
+              br
+              b y'' + y = 0
+        // Basic Card Example 
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Differential Equations
+          .card-body
+            p Solve differential equations of any order. Examine solutions and plots of the solution families. Specify initial conditions to find exact solutions.
+            p
+              | Solve a linear ordinary differential equation:
+              br
+              b y'' + y = 0
+            p
+              | Specify initial values:
+              br
+              b y'' + y = 0, y(0)=2, y'(0)=1
+            p
+              | Solve a nonlinear equation:
+              br
+              b f'(t) = f(t)^2 + 1
+      .col-lg-6
+        // Basic Card Example 
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Applied Mathematics
+          .card-body
+            p Perform numerical analysis and optimization of systems and objects, including packing and covering of objects and control systems.
+            p
+              | Minimize or maximize a function:
+              br
+              b maximize x(1-x)e^x
+            p
+              | Numerically integrate functions that cannot be integrated symbolically:
+              br
+              b integrate sin(cos x) from x=0 to 1
+            p
+              | Minimize or maximize a function subject to a constraint:
+              br
+              b maximize e^x sin y on x^2+y^2=1
+        // Basic Card Example 
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Algebra
+          .card-body
+            p Find roots of and expand, factor or simplify mathematical expressions—everything from polynomials to fields and groups.
+            p
+              | Solve an equation:
+              br
+              b x^3 - 4x^2 + 6x - 24 = 0
+            p
+              | Factor a polynomial:
+              br
+              b factor 2x^5 - 19x^4 + 58x^3 - 67x^2 + 56x - 48
+            p
+              | Simplify an expression:
+              br
+              b 1/(1+sqrt(2))
