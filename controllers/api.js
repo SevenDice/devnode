@@ -1,15 +1,15 @@
-const WolframAlphaAPI = require('../lib/WolframAlphaAPI');
-const Task = require('../models/Task');
-const puppeteer = require('puppeteer');
-const fs = require('fs-extra');
-const path = require('path');
-const Redis = require('ioredis');
-const redis = new Redis(process.env.REDIS_URL,{connectTimeout: 10000});
-const hashName = 'solutionList';
+const WolframAlphaAPI = require("../lib/WolframAlphaAPI");
+const Task = require("../models/Task");
+const puppeteer = require("puppeteer");
+const fs = require("fs-extra");
+const path = require("path");
+const Redis = require("ioredis");
+const redis = new Redis(process.env.REDIS_URL, { connectTimeout: 10000 });
+const hashName = "solutionList";
 
 // TODO
 // 2. fetch img's from json then convert it to binary and save it in db instead url from wolfram
-  // Another option - Integrate MathJax library for formating solutions
+// Another option - Integrate MathJax library for formating solutions
 // 3. media query for resize img in solution
 // 4. Delete all solutions
 // 5. Redis integration
@@ -19,46 +19,47 @@ const hashName = 'solutionList';
 
 // Redis test route /redis
 exports.testRedis = (req, res) => {
-
   async function main() {
     try {
-        const cachedSolution = JSON.parse(await redis.get('5cc1d7a8a9bcb30e940e1bbe'));
-        //console.log(cachedSolution)
-        res.send(cachedSolution._id);
-    }
-    catch (error) {
-        console.error(error);
+      const cachedSolution = JSON.parse(
+        await redis.get("5cc1d7a8a9bcb30e940e1bbe")
+      );
+      //console.log(cachedSolution)
+      res.send(cachedSolution._id);
+    } catch (error) {
+      console.error(error);
     }
     //redis.disconnect();
-}
+  }
 
-main();
-}
+  main();
+};
 // Get api index page
 exports.getApi = (req, res) => {
-  res.render('api/index', {
-    title: 'Find Solution'
+  res.render("api/index", {
+    title: "Find Solution"
   });
 };
 
 // Get all solutions route = api/solutions
 exports.getAllSolutions = (req, res) => {
   Task.find({})
-  .populate('User')
-  .sort({date:'desc'})
-  .then(tasks => {
-    res.render('api/solutions', {
-      tasks: tasks,
-      title: 'Solutions'
+    .populate("User")
+    .sort({ date: "desc" })
+    .then(tasks => {
+      res.render("api/solutions", {
+        
+        tasks: tasks,
+        title: "Solutions"
+      });
     });
-  });
 };
 
 // Delete all solutions
 exports.deleteAllSolutions = (req, res) => {
-  Task.drop()
-  res.render('api/solutions', {
-    title: 'Solutions'
+  Task.drop();
+  res.render("api/solutions", {
+    title: "Solutions"
   });
 };
 
@@ -69,72 +70,92 @@ exports.getSolution = (req, res) => {
     try {
       let task = JSON.parse(await redis.get(req.params.id));
       let output;
-      if(task._id = req.params.id) {
-        output = task.contentData.map((pod) => {
-          const subpodContent = pod.subpods.map(subpod =>
-            `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
-          ).join('\n');
-          return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;}).join('\n');
-      }
-      else {
+      if ((task._id = req.params.id)) {
+        output = task.contentData
+          .map(pod => {
+            const subpodContent = pod.subpods
+              .map(
+                subpod =>
+                  `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
+              )
+              .join("\n");
+            return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;
+          })
+          .join("\n");
+      } else {
         Task.findOne({
           _id: req.params.id
         })
-        .populate('user')
-        .then(task => {
-          output = task.contentData.map((pod) => {
-            const subpodContent = pod.subpods.map(subpod =>
-              `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
-            ).join('\n');
-            return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;}).join('\n');
-        });
+          .populate("user")
+          .then(task => {
+            output = task.contentData
+              .map(pod => {
+                const subpodContent = pod.subpods
+                  .map(
+                    subpod =>
+                      `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
+                  )
+                  .join("\n");
+                return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;
+              })
+              .join("\n");
+          });
       }
-      res.render('api/solution', {
-        task:task,
-        output:output,
-        title: 'View Solution'
+      res.render("api/solution", {
+        task: task,
+        output: output,
+        title: "View Solution"
       });
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
   (async () => {
     await showSolution();
   })();
-}; 
+};
 
 // Generate PDF single solution route = solution/pdf/:id
 exports.getPDFSolution = (req, res) => {
   Task.findOne({
     _id: req.params.id
-  })
-  .then(task => {
-    (async function(){
+  }).then(task => {
+    (async function() {
       try {
+        const output = task.contentData
+          .map(pod => {
+            const subpodContent = pod.subpods
+              .map(
+                subpod =>
+                  `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
+              )
+              .join("\n");
+            return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;
+          })
+          .join("\n");
 
-        const output = task.contentData.map((pod) => {
-          const subpodContent = pod.subpods.map(subpod =>
-            `  <img src="${subpod.img.src}" alt="${subpod.img.alt}">`
-          ).join('\n');
-          return `<br>\n<h3>${pod.title}</h3>\n${subpodContent}`;}).join('\n');
-
-        const filePath = path.join(process.cwd(), 'generatedPDF', `${task._id}.pdf`)
-        const browser = await puppeteer.launch({args: ['--no-sandbox']});
+        const filePath = path.join(
+          process.cwd(),
+          "generatedPDF",
+          `${task._id}.pdf`
+        );
+        const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
         const page = await browser.newPage();
-  
+
         await page.setContent(output);
-        await page.emulateMedia('screen');
+        await page.emulateMedia("screen");
         await page.pdf({
           path: filePath,
-          format: 'A4',
+          format: "A4",
           printBackground: true
         });
-        const pdf = await (filePath);
+        const pdf = await filePath;
         await browser.close();
-        res.contentType('application/pdf'); 
-        res.setHeader('Content-Disposition', 'attachment; filename=' + task._id +'.pdf');
+        res.contentType("application/pdf");
+        res.setHeader(
+          "Content-Disposition",
+          "attachment; filename=" + task._id + ".pdf"
+        );
         res.sendFile(pdf);
-        
+
         // var file = fs.createReadStream(fileName);
         // file.on('end', function() {
         //   fs.unlink(fileName, function() {
@@ -142,13 +163,11 @@ exports.getPDFSolution = (req, res) => {
         //   });
         // });
         // file.pipe(res);
-
       } catch (e) {
-        console.log('our error', e);
+        console.log("our error", e);
       }
     })();
   });
-
 };
 
 // Проверяем в кэше:
@@ -177,53 +196,44 @@ exports.addSolution = (req, res) => {
   async function findSolution() {
     try {
       const hashFieldExists = await redis.hexists(hashName, hashField);
-      if(hashFieldExists) {
-        const getHashValue = await redis.hget(hashName, hashField)
+      if (hashFieldExists) {
+        const getHashValue = await redis.hget(hashName, hashField);
         res.redirect(`api/solution/${getHashValue}`);
-      }
-      else {
+      } else {
         Task.findOne({
           taskName: req.body.task
-        })
-        .then(solutionFromDB => {
+        }).then(solutionFromDB => {
           if (solutionFromDB) {
             redis.hset(hashName, hashField, solutionFromDB.id);
             redis.set(solutionFromDB.id, JSON.stringify(solutionFromDB));
             res.redirect(`api/solution/${solutionFromDB.id}`);
-          }
-          else {
+          } else {
             const waApi = WolframAlphaAPI(process.env.WOLFRAM_KEY);
             const waTask = req.body.task;
-            waApi.getFull(waTask).then((queryresult) => {
-            const pods = queryresult.pods;
-            const newSolution = {
-              taskName: req.body.task,
-              contentData: pods,
-              user: req.user.id
-            }
-            // Save to db
-              new Task(newSolution)
-                .save()
-                .then(task => {
-                  redis.hset(hashName, task.taskName, task.id);
-                  redis.set(task.id, JSON.stringify(task))
-                  res.redirect(`api/solution/${task.id}`);
-                });
-          })
+            waApi.getFull(waTask).then(queryresult => {
+              const pods = queryresult.pods;
+              const newSolution = {
+                taskName: req.body.task,
+                contentData: pods,
+                user: req.user.id
+              };
+              // Save to db
+              new Task(newSolution).save().then(task => {
+                redis.hset(hashName, task.taskName, task.id);
+                redis.set(task.id, JSON.stringify(task));
+                res.redirect(`api/solution/${task.id}`);
+              });
+            });
           }
-        })
+        });
       }
-    }
-    catch (error) {
-    }
+    } catch (error) {}
   }
 
-(async () => {
-  await findSolution();
-})();
+  (async () => {
+    await findSolution();
+  })();
 };
-
-
 
 // // Find solution and save it (only db)
 // // integrate e^x/(e^(2x)+2e^x+1)
@@ -260,7 +270,7 @@ exports.addSolution = (req, res) => {
 
 // Delete task route = api/solutions/delete/:id
 exports.deleteSolution = (req, res, next) => {
-  async function eraseFromDBandCache(){
+  async function eraseFromDBandCache() {
     try {
       const allHash = await redis.hgetall(hashName);
 
@@ -271,15 +281,11 @@ exports.deleteSolution = (req, res, next) => {
       console.log(hashField);
       redis.del(req.params.id);
       redis.hdel(hashName, hashField);
-      Task.deleteOne({_id: req.params.id})
-      .then(() => {
-        req.flash('success', {msg: 'Solution was deleted'})
-        res.redirect('/dashboard')
+      Task.deleteOne({ _id: req.params.id }).then(() => {
+        req.flash("success", { msg: "Solution was deleted" });
+        res.redirect("/dashboard");
       });
-    }
-    catch(error){
-
-    }
+    } catch (error) {}
   }
 
   (async () => {
